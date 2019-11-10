@@ -50,3 +50,17 @@ Multidex.install(this, R.layout.custom_loading);
 ```
 
 If there are ClassNotFoundException, keep missing class in the `multiDexKeepProguard` file as [Enable multidex for apps with over 64K methods](https://developer.android.com/studio/build/multidex) mentioned.
+
+## Debug
+If dex installation doest work well, you can enable logging to see the whole process:
+
+```java
+// enable log
+Multidex.enableLog();
+Multidex.install(this);
+```
+Here are same example log, include `main process` and `:nodex` process.
+
+<img src="doc/main-process-log.png" alt="main-process-log" width="600"/>
+
+<img src="doc/nodex-process-log.png" alt="nodex-process-log" width="600"/>
