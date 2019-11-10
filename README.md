@@ -2,8 +2,10 @@
 
 [![github](https://img.shields.io/badge/platform-android-ff69b4.svg)](https://github.com/hacktons/convex_bottom_bar)
 [![License Apache](https://img.shields.io/badge/license-apache2.0-blue)](http://www.apache.org/licenses/LICENSE-2.0.txt)
+[![Build Status](https://travis-ci.com/hacktons/dexing.svg?branch=master)](https://travis-ci.com/hacktons/dexing)
 
-When your app and the libraries it references exceed 65,536 methods, we need to ship apk with multidex enable, usually follow the guides:
+
+When your app and the libraries it references exceed 65,536 enmethods, we need to ship apk with multidex enable, usually follow the guides:
 [Enable multidex for apps with over 64K methods](https://developer.android.com/studio/build/multidex).
 
 However the main dex `classes.dex` can still be too large; It' difficult to maintain the mainDexList.txt since your app's keep growing.
@@ -48,3 +50,17 @@ Multidex.install(this, R.layout.custom_loading);
 ```
 
 If there are ClassNotFoundException, keep missing class in the `multiDexKeepProguard` file as [Enable multidex for apps with over 64K methods](https://developer.android.com/studio/build/multidex) mentioned.
+
+## Debug
+If dex installation doest work well, you can enable logging to see the whole process:
+
+```java
+// enable log
+Multidex.enableLog();
+Multidex.install(this);
+```
+Here are same example log, include `main process` and `:nodex` process.
+
+<img src="doc/main-process-log.png" alt="main-process-log" width="600"/>
+
+<img src="doc/nodex-process-log.png" alt="nodex-process-log" width="600"/>
