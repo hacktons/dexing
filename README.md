@@ -60,7 +60,7 @@ If dex installation doest work well, you can enable logging to see the whole pro
 Multidex.enableLog();
 Multidex.install(this);
 ```
-Here are same example log, include `main process` and `:nodex` process.
+Here are some example logs, including `main process` and `:nodex process`.
 
 <img src="doc/main-process-log.png" alt="main-process-log" width="600"/>
 

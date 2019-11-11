@@ -38,6 +38,17 @@ def getRepositoryPassword() {
     return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
 }
 
+def propsFile = file('private.properties')
+if (propsFile.exists()) {
+    println "use private config"
+    def props = new Properties()
+    propsFile.withReader('UTF-8') { reader -> props.load(reader) }
+    props.each { key, val ->
+        println "set $key => $val"
+        getProject().setProperty(key, val)
+    }
+}
+
 afterEvaluate { project ->
 
     uploadArchives {
