@@ -1,5 +1,6 @@
 # Dexing
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.avenwu/dexing)](https://search.maven.org/search?q=a:dexing)
 [![github](https://img.shields.io/badge/platform-android-ff69b4.svg)](https://github.com/hacktons/convex_bottom_bar)
 [![License Apache](https://img.shields.io/badge/license-apache2.0-blue)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Build Status](https://travis-ci.com/hacktons/dexing.svg?branch=master)](https://travis-ci.com/hacktons/dexing)
