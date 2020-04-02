@@ -28,7 +28,6 @@ import java.io.IOException;
 import static cn.hacktons.dexing.ProcessUtils.hasDexOpt;
 import static cn.hacktons.dexing.ProcessUtils.obtainLock;
 
-
 class NormalDexProcessor {
 
     void install(Context context) {
@@ -38,25 +37,49 @@ class NormalDexProcessor {
             MultiDex.install(context);
             return;
         }
-        DexLog.i("hang up process, waiting for dexopt");
         File lock = obtainLock(context);
+        if (lock.exists()) {
+            syncInstallDex(context, lock);
+            return;
+        }
         while (!lock.exists()) {
             try {
                 lock.createNewFile();
+                DexLog.i(lock.getAbsolutePath() + " locked");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        asyncOptDex(context);
+        syncInstallDex(context, lock);
+    }
+
+    /**
+     * Wait for the :nodex process to complete the optdex.
+     *
+     * @param context instance of Context
+     * @param lock    optdex file lock
+     */
+    private void syncInstallDex(Context context, File lock) {
+        DexLog.i("Blocking on lock, " + lock.getAbsolutePath() + ", waiting for dexopt");
+        while (lock.exists()) {
+            DexLog.i("wait...");
+            SystemClock.sleep(100);
+        }
+        MultiDex.install(context);
+    }
+
+    /***
+     * Launch an Activity to handle the optdex in a separate process.
+     *
+     * @param context instance of Context
+     */
+    private void asyncOptDex(Context context) {
         DexLog.i("show dex install Activity");
         Intent intent = new Intent(context, DexInstallActivity.class);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);
-        while (lock.exists()) {
-            DexLog.i("loop...");
-            SystemClock.sleep(100);
-        }
-        MultiDex.install(context);
     }
 }
