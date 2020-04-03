@@ -18,7 +18,6 @@ package cn.hacktons.dexing;
 
 import android.app.Activity;
 import android.os.Process;
-import android.os.SystemClock;
 import android.support.multidex.MultiDex;
 
 import java.lang.ref.WeakReference;
@@ -35,19 +34,19 @@ public class Installer extends Thread {
 
     @Override
     public void run() {
-        final double start = SystemClock.currentThreadTimeMillis();
+        final double start = System.currentTimeMillis();
         Activity context = mRef.get();
         if (context == null) {
             return;
         }
-        DexLog.i("execute install");
+        DexLog.i("execute install...");
         MultiDex.install(context);
         DexLog.i("install success, release lock");
         obtainLock(context).delete();
         saveDexOpt(context);
         DexLog.i("remove activity");
         context.finish();
-        double diff = SystemClock.currentThreadTimeMillis() - start;
+        double diff = System.currentTimeMillis() - start;
         DexLog.i("time consumed => " + (diff / 1000.0) + "s");
         android.os.Process.killProcess(Process.myPid());
     }
