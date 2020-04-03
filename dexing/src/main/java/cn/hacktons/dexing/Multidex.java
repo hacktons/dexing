@@ -32,6 +32,7 @@ public class Multidex {
     }
 
     public static void install(Application context, int layout) {
+        DexLog.i("invoke install");
         if (IS_VM_MULTIDEX_CAPABLE) {
             return;
         }
@@ -52,7 +53,7 @@ public class Multidex {
         DexLog.sDisable = false;
     }
 
-    static boolean isVMMultidexCapable(String versionString) {
+    private static boolean isVMMultidexCapable(String versionString) {
         boolean isMultidexCapable = false;
         if (versionString != null) {
             Matcher matcher = Pattern.compile("(\\d+)\\.(\\d+)(\\.\\d+)?").matcher(versionString);

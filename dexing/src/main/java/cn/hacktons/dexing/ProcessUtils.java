@@ -16,6 +16,7 @@
 
 package cn.hacktons.dexing;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -67,7 +68,7 @@ class ProcessUtils {
         String key;
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            String version = info.versionName;
+            int version = info.versionCode;
             String name = info.versionName;
             key = name + "|" + version;
         } catch (PackageManager.NameNotFoundException e) {
@@ -76,6 +77,7 @@ class ProcessUtils {
         return sp.getBoolean(key, false);
     }
 
+    @SuppressLint("ApplySharedPref")
     static void saveDexOpt(Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
         String key;
@@ -88,7 +90,7 @@ class ProcessUtils {
             key = "_|_";
         }
         editor.putBoolean(key, true);
-        editor.apply();
+        editor.commit();
     }
 
     static File obtainLock(Context context) {
