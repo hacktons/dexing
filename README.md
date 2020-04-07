@@ -40,8 +40,18 @@ public class CustomApplication extends Application {
     }
 }
 ```
-3.That's all
 
+
+3.Keep rule
+Make sure the dexing package is included in main dex. If not, add this rule into your dex keep list:
+```proguard
+# multidex-config.pro
+-keep class cn.hacktons.dexing.**
+```
+
+```groovy
+multiDexKeepProguard file('multidex-config.pro')
+```
 
 ## Advance
 
