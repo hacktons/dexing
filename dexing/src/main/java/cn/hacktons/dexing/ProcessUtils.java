@@ -65,6 +65,25 @@ class ProcessUtils {
 
     static boolean hasDexOpt(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        String key = generateDexKey(context);
+        return sp.getBoolean(key, false);
+    }
+
+    @SuppressLint("ApplySharedPref")
+    static void saveDexOpt(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
+        String key = generateDexKey(context);
+        editor.putBoolean(key, true);
+        editor.commit();
+    }
+
+    /**
+     * Generate dex key for App, the key is version sensitive.
+     *
+     * @param context
+     * @return unique key
+     */
+    private static String generateDexKey(Context context) {
         String key;
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -74,23 +93,7 @@ class ProcessUtils {
         } catch (PackageManager.NameNotFoundException e) {
             key = "_|_";
         }
-        return sp.getBoolean(key, false);
-    }
-
-    @SuppressLint("ApplySharedPref")
-    static void saveDexOpt(Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
-        String key;
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            String version = info.versionName;
-            String name = info.versionName;
-            key = name + "|" + version;
-        } catch (PackageManager.NameNotFoundException e) {
-            key = "_|_";
-        }
-        editor.putBoolean(key, true);
-        editor.commit();
+        return key;
     }
 
     static File obtainLock(Context context) {

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+##################################################################
+##
+##  Release new version of dexing
+##
+##
+##  Author: Chaobin Wu
+##  Email : chaobinwu89@gmail.com
+##
+#################################################################
+die() {
+  echo "$*"
+  exit 1
+}
+tag='[Deploy]'
+error() {
+  echo -e "\033[1m$tag\033[0m \033[31m$*\033[0m"
+}
+info() {
+  echo -e "\033[1m$tag\033[0m \033[32m$*\033[0m"
+}
+warning() {
+  echo -e "\033[1m$tag\033[0m \033[33m$*\033[0m"
+}
+confirm() {
+  read -r -p "Looks great! Are you ready to continue (y/n)? " input
+  if [[ $input != 'y' ]]; then
+    die "Deploy terminated!"
+  fi
+}
+info "Verify the verion to be shipped"
+grep VERSION_NAME < dexing/gradle.properties
+confirm
+
+if ! ./gradlew clean assembleRelease; then
+  die "build failed"
+fi
+if ! ./gradlew :dexing:uploadArchives ; then
+  die "uploadArchives failed"
+fi
+info "New Version has been uploaded!"
+info "Verify the staging repo at https://oss.sonatype.org/#stagingRepositories"
