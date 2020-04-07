@@ -17,6 +17,9 @@
 package cn.hacktons.dexing;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.os.Process;
 import android.support.multidex.MultiDex;
 
@@ -45,9 +48,28 @@ public class Installer extends Thread {
         obtainLock(context).delete();
         saveDexOpt(context);
         DexLog.i("remove activity");
-        context.finish();
         double diff = System.currentTimeMillis() - start;
         DexLog.i("time consumed => " + (diff / 1000.0) + "s");
-        android.os.Process.killProcess(Process.myPid());
+        context.finish();
+        // Terminate process later
+        TerminateTask.invoke();
+    }
+
+    static class TerminateTask implements Runnable, MessageQueue.IdleHandler {
+        @Override
+        public void run() {
+            Looper.myQueue().addIdleHandler(this);
+        }
+
+        @Override
+        public boolean queueIdle() {
+            DexLog.i("The `:nodex` process is about to terminate...");
+            Process.killProcess(Process.myPid());
+            return false;
+        }
+
+        static void invoke() {
+            new Handler(Looper.getMainLooper()).post(new TerminateTask());
+        }
     }
 }

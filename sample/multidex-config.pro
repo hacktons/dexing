@@ -1,1 +1,1 @@
--keep class cn.hacktons.dexing.** {*;}
+-keep class cn.hacktons.dexing.**
